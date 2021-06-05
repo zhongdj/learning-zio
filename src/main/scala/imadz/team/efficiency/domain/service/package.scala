@@ -6,6 +6,7 @@ package object service {
   }
 
   case class GitCommandExecutionError(message: String) extends GitError
+  case class CommitLogIncompletedError(message: String) extends GitError
   object ServiceError {
 
   }

@@ -93,7 +93,7 @@ object GitCommitParserTest extends DefaultRunnableSpec {
       },
       testM("recognize cat-file commit with parent commit") {
         // Given
-        val commitCatOutput2 = fromOutput(
+        val commitCatOutput = fromOutput(
           """tree 76a0b9295b314274da37e27381daa06a13a5cf89
             |parent f958dae046eb9085909980b8fc26f28bd80ec35b
             |author Barry Zhong <zhongdj@gmail.com> 1594455445 +0800
@@ -102,14 +102,6 @@ object GitCommitParserTest extends DefaultRunnableSpec {
             |reformat algo stuff
             |
             |""".stripMargin)
-        val commitCatOutput =     fromOutput("""tree 76a0b9295b314274da37e27381daa06a13a5cf89
-                      |parent f958dae046eb9085909980b8fc26f28bd80ec35b
-                      |author Barry Zhong <zhongdj@gmail.com> 1594455445 +0800
-                      |committer Barry Zhong <zhongdj@gmail.com> 1594455445 +0800
-                      |
-                      |reformat algo stuff
-                      |
-                      |""".stripMargin)
         // When
         for {
           actual <- parseCatFileCommitObject(commitCatOutput)
