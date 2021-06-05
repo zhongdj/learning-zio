@@ -67,16 +67,49 @@ object GitCommitParserTest extends DefaultRunnableSpec {
       }
     ),
     suite("GitCommitCatFile Parser")(
-      testM("recognize cat-file commit") {
+      testM("recognize cat-file initial commit without parent commit") {
         // Given
         val commitCatOutput = fromOutput(
+          """|tree 39e9a79d63fcac837ea610ceec36f257eea7512d
+             |author Barry Zhong <zhongdj@gmail.com> 1622886153 +0800
+             |committer Barry Zhong <zhongdj@gmail.com> 1622886153 +0800
+             |
+             |initial commit""".stripMargin)
+
+        // When
+        for {
+          actual <- parseCatFileCommitObject(commitCatOutput)
+        } yield
+          // Then
+          assert(actual)(equalTo(
+            CatCommitObject(
+              tree = "39e9a79d63fcac837ea610ceec36f257eea7512d",
+              parent = None,
+              authorName = "Barry Zhong",
+              authorEmail = "zhongdj@gmail.com",
+              timestamp = 1622886153L,
+              locale = "+0800"
+            )))
+      },
+      testM("recognize cat-file commit with parent commit") {
+        // Given
+        val commitCatOutput2 = fromOutput(
           """tree 76a0b9295b314274da37e27381daa06a13a5cf89
             |parent f958dae046eb9085909980b8fc26f28bd80ec35b
             |author Barry Zhong <zhongdj@gmail.com> 1594455445 +0800
             |committer Barry Zhong <zhongdj@gmail.com> 1594455445 +0800
             |
             |reformat algo stuff
+            |
             |""".stripMargin)
+        val commitCatOutput =     fromOutput("""tree 76a0b9295b314274da37e27381daa06a13a5cf89
+                      |parent f958dae046eb9085909980b8fc26f28bd80ec35b
+                      |author Barry Zhong <zhongdj@gmail.com> 1594455445 +0800
+                      |committer Barry Zhong <zhongdj@gmail.com> 1594455445 +0800
+                      |
+                      |reformat algo stuff
+                      |
+                      |""".stripMargin)
         // When
         for {
           actual <- parseCatFileCommitObject(commitCatOutput)

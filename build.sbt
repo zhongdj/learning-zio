@@ -17,7 +17,8 @@ lazy val root = (project in file("."))
       "dev.zio" %% "zio-test" % zioVersion % "test",
       "dev.zio" %% "zio-test-sbt" % zioVersion % "test",
       "dev.zio" %% "zio-test-magnolia" % zioVersion % "test"
-    )
+    ),
+    testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
   )
 
 // Uncomment the following for publishing to Sonatype.
