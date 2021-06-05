@@ -11,11 +11,11 @@ object GitCommitParser {
   private val catFileInitCommitRegex = """(?s)^tree (.*)\nauthor (.*) <(.*)> (.*) (.*)\ncommitter .*\n\n(.*)$""".r
 
   private val compileCatFileCommit: String => IO[GitError, CatCommitObject] = {
-    case catFileCommitRegex(id, commitId, autherName, autherEmail, timestamp, locale, _) => IO.succeed(
-      CatCommitObject(id.trim, Some(commitId), autherName, autherEmail, timestamp.toLong, locale)
+    case catFileCommitRegex(id, commitId, authorName, authorEmail, timestamp, locale, _) => IO.succeed(
+      CatCommitObject(id.trim, Some(commitId), authorName, authorEmail, timestamp.toLong, locale)
     )
-    case catFileInitCommitRegex(id, autherName, autherEmail, timestamp, locale, _) => IO.succeed(
-      CatCommitObject(id.trim, None, autherName, autherEmail, timestamp.toLong, locale)
+    case catFileInitCommitRegex(id, authorName, authorEmail, timestamp, locale, _) => IO.succeed(
+      CatCommitObject(id.trim, None, authorName, authorEmail, timestamp.toLong, locale)
     )
     case err => IO.fail(GitCommandExecutionError(err.trim))
   }
