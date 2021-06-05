@@ -54,12 +54,12 @@ package object LogCommitParser {
     compileGitCommit(xs.fold("")((x, y) => s"$x\n$y").trim)
 
   private def compileGitCommit: String => IO[GitError, GitCommit] = {
-    case commitRegex(id, autherName, autherEmail, authorDate, committerName, committerEmail, commitDate, message) => IO.succeed(
+    case commitRegex(id, authorName, authorEmail, authorDate, committerName, committerEmail, commitDate, message) => IO.succeed(
       GitCommit(
         id = id.trim,
         topLevelTreeId = "",
         parentCommitId = None,
-        author = GitUser(autherName, autherEmail, new DateTime(authorDate.trim)),
+        author = GitUser(authorName, authorEmail, new DateTime(authorDate.trim)),
         committer = GitUser(committerName, committerEmail, new DateTime(commitDate.trim)),
         message = message.trim
       ))
