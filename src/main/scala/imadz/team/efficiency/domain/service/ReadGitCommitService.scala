@@ -9,12 +9,12 @@ import zio.stream._
 
 class ReadGitCommitService(repository: GitCommitRepository, eventPublisher: EventPublisher, commitExtractor: CommitExtractor) {
 
-  def toGitCommitEvent: GitCommit => GitCommitCreated = GitCommitCreated
+  def toGitCommitEvent(projectDir: String): GitCommit => GitCommitCreated = commit => GitCommitCreated(commit, projectDir)
 
   def extractGitCommits(projectDir: String): IO[DomainError, Unit] = {
     commitExtractor.extract(projectDir)
       .mapError(e => GitCommitExtractError(e.toString))
-      .tap(repository.save).map(toGitCommitEvent)
+      .tap(repository.save).map(toGitCommitEvent(projectDir))
       .tap(eventPublisher.publish("GitCommit"))
       .run(ZSink.drain)
   }

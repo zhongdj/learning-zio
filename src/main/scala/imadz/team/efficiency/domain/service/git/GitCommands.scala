@@ -7,4 +7,5 @@ object GitCommands {
 
   def cat_file_p(dir: String)(commitId: String) = s"${common_prefix(dir)} cat-file -p ${commitId}"
 
+  def diff_tree_full_index_r_M_C(dir: String)(commitId: String) = s"${common_prefix(dir)} diff-tree --full-index -r -M -C -B"
 }
