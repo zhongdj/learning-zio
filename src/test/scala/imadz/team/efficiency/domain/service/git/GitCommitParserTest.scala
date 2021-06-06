@@ -1,16 +1,15 @@
 package imadz.team.efficiency.domain.service.git
 
+import imadz.team.efficiency.common.Shells.fromOutput
 import imadz.team.efficiency.domain.entity.{GitCommit, GitUser}
 import imadz.team.efficiency.domain.service
 import imadz.team.efficiency.domain.service.GitCommandExecutionError
 import imadz.team.efficiency.domain.service.git.GitCommitParser.{parseCatFileCommitObject, parseFullerLog}
 import org.joda.time.DateTime
-import zio.stream._
 import zio._
-import zio.stream.ZStream.fromIterable
-import zio.test._
+import zio.stream._
 import zio.test.Assertion._
-import zio.test.DefaultRunnableSpec
+import zio.test.{DefaultRunnableSpec, _}
 
 object GitCommitParserTest extends DefaultRunnableSpec {
   def spec = suite("Git Commit Parsers")(
@@ -130,7 +129,4 @@ object GitCommitParserTest extends DefaultRunnableSpec {
     )
   )
 
-  private def fromOutput(catFileOutput: String) = {
-    fromIterable(catFileOutput.split("""\n"""))
-  }
 }
