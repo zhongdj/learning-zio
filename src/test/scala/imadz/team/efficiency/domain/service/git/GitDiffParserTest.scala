@@ -2,8 +2,10 @@ package imadz.team.efficiency.domain.service.git
 
 import imadz.team.efficiency.common.Shells.fromOutput
 import imadz.team.efficiency.domain.entity._
+import imadz.team.efficiency.domain.service.GitCommandExecutionError
+import imadz.team.efficiency.domain.service.git.GitTreeDiffParser.parseTreeDiffContent
 import zio.Chunk
-import zio.test.Assertion.equalTo
+import zio.test.Assertion.{equalTo, fails}
 import zio.test._
 
 object GitDiffParserTest extends DefaultRunnableSpec {
@@ -27,15 +29,10 @@ object GitDiffParserTest extends DefaultRunnableSpec {
  U: file is unmerged (you must complete the merge before it can be committed)
  X: "unknown" change type (most probably a bug, please report it)
  */
-  """:100644 100644 bcd1234 0123456 M file0
-    |:100644 100644 abcd123 1234567 C68 file1 file2
-    |:100644 100644 abcd123 1234567 R86 file1 file3
-    |:000000 100644 0000000 1234567 A file4
-    |:100644 000000 1234567 0000000 D file5
-    |:000000 000000 0000000 0000000 U file6""".stripMargin
 
-  override def spec = suite("git diff-tree parser") {
-    testM("all op type should be compiled") {
+  override def spec = suite("Git diff-tree Parser")(
+
+    testM("all tree entry op type should be compiled") {
       // Given
       val diffTreeOutput = fromOutput(
         """:100644 100644 bcd1234 0123456 M	file0
@@ -47,7 +44,7 @@ object GitDiffParserTest extends DefaultRunnableSpec {
 
       // When
       for {
-        xs <- GitTreeDiffParser.parseTreeDiffContent(diffTreeOutput).runCollect
+        xs <- parseTreeDiffContent(diffTreeOutput).runCollect
       } yield {
         // Then
         assert(xs)(equalTo(Chunk(
@@ -59,7 +56,19 @@ object GitDiffParserTest extends DefaultRunnableSpec {
           EntryUnmerged("", "000000", "000000", "0000000", "0000000", UnmergeFile, "file6")
         )))
       }
+    },
 
+    testM("git command fatal should be compiled") {
+      // Given
+      val diffTreeOutput = fromOutput("fatal: not a git repository (or any of the parent directories): .git")
+
+      // When
+      val err = parseTreeDiffContent(diffTreeOutput).runCollect.run
+
+      // Then
+      assertM(err)(fails(equalTo(
+        GitCommandExecutionError("fatal: not a git repository (or any of the parent directories): .git")
+      )))
     }
-  }
+  )
 }
