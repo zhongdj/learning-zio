@@ -1,8 +1,9 @@
-package imadz.team.efficiency.domain.service
+package imadz.team.efficiency.domain.processor
 
 import imadz.team.efficiency.domain.Errors.{DomainError, GitDiffTreeExtractError}
 import imadz.team.efficiency.domain.EventPublisher
 import imadz.team.efficiency.domain.entity.{GitCommitCreated, TreeEntryEvent}
+import imadz.team.efficiency.domain.service.GitError
 import imadz.team.efficiency.domain.service.git.GitCommands.diff_tree_full_index_r_M_C
 import imadz.team.efficiency.domain.service.git._
 import imadz.team.efficiency.domain.service.shell.shellExecMap

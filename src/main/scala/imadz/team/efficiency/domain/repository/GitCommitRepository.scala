@@ -1,4 +1,4 @@
-package imadz.team.efficiency.domain.service
+package imadz.team.efficiency.domain.repository
 
 import imadz.team.efficiency.domain.Errors.DomainError
 import imadz.team.efficiency.domain.entity.GitCommit

@@ -3,6 +3,7 @@ package imadz.team.efficiency.domain.service
 import imadz.team.efficiency.domain.Errors.{DomainError, GitCommitExtractError}
 import imadz.team.efficiency.domain.EventPublisher
 import imadz.team.efficiency.domain.entity.{GitCommit, GitCommitCreated}
+import imadz.team.efficiency.domain.repository.GitCommitRepository
 import imadz.team.efficiency.domain.service.git.CommitExtractor
 import zio.IO
 import zio.stream._
