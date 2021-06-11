@@ -8,12 +8,12 @@ import imadz.team.efficiency.domain.service.git.CommitExtractor
 import zio.IO
 import zio.stream._
 
-class ReadGitCommitService(repository: GitCommitRepository, eventPublisher: EventPublisher, commitExtractor: CommitExtractor) {
+class ReadGitCommitService(repository: GitCommitRepository, eventPublisher: EventPublisher) extends CommitExtractor {
 
-  def toGitCommitEvent(projectDir: String): GitCommit => GitCommitCreated = commit => GitCommitCreated(commit, projectDir)
+  private def toGitCommitEvent(projectDir: String): GitCommit => GitCommitCreated = commit => GitCommitCreated(commit, projectDir)
 
   def extractGitCommits(projectDir: String): IO[DomainError, Unit] = {
-    commitExtractor.extract(projectDir)
+    this.extract(projectDir)
       .mapError(e => GitCommitExtractError(e.toString))
       .tap(repository.save).map(toGitCommitEvent(projectDir))
       .tap(eventPublisher.publish("GitCommit"))
