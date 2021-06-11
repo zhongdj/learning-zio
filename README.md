@@ -26,7 +26,7 @@ each <b> Git Project </b> has basically 3 attributes:
    * repositoryUrl, such as "ssh://zhongdj@github.com/zhongdj/git-stats"
    * branch, such as master
    * local, such as true or false
-each <b> Git Project </b> has basicall 2 options:
+each <b> Git Project </b> has basicaly 2 options:
    * language, such as scala or golang
    * excludes, indicates which files will not be analyzed, such as vendor dir for golang
 - <b> Analytic Task </b>,
