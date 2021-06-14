@@ -69,7 +69,7 @@ each <b> Analytic Task </b> has many <b> Analytic Task Items</b>, and each <b> A
 ### with default configuration 
 ```shell
 curl -H "Content-Type:application/json" \
-  http://${analytic.host}:${port}/v1/analyticProjects \
+  http://${analytic_host}:${analytic_port}/v1/analyticProjects \
   -d \
   '{
     "gitProjects" : [{
@@ -85,7 +85,7 @@ curl -H "Content-Type:application/json" \
 
 ```shell
 curl -H "Content-Type:application/json" \
-  http://${analytic.host}:${port}/v1/analyticProjects \
+  http://${analytic_host}:${analytic_port}/v1/analyticProjects \
   -d \
   '{
     "gitProjects" : [
@@ -97,7 +97,7 @@ curl -H "Content-Type:application/json" \
       }
     ],
     "options" : {
-      "interval"        : 20 
+      "interval"        : 20, 
       "repeatedCycle"   : 240  
     }
   }'
