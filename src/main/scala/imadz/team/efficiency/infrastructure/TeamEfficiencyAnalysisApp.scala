@@ -1,7 +1,7 @@
 package imadz.team.efficiency.infrastructure
 
-import akka.actor.typed.{ActorRef, ActorSystem}
 import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.{ActorRef, ActorSystem}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import imadz.team.efficiency.infrastructure.AnalysisProjectManager.Command

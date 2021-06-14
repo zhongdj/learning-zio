@@ -23,7 +23,7 @@ final case class GitProject(repositoryUrl: String,
 }
 
 object AnalyticProject {
-  implicit val analyticProjectCreatedJsonFormat: RootJsonFormat[AnalyticProjectCreated] = jsonFormat1(AnalyticProjectCreated)
+  implicit val analyticProjectCreatedJsonFormat: RootJsonFormat[AnalyticProjectCreated] = jsonFormat2(AnalyticProjectCreated)
   implicit val gitProjectJsonFormat: RootJsonFormat[GitProject] = jsonFormat4(GitProject)
   implicit val analyticProjectOptionsJsonFormat: RootJsonFormat[AnalyticProjectOptions] = jsonFormat2(AnalyticProjectOptions.apply)
   implicit val analyticProjectJsonFormat: RootJsonFormat[AnalyticProject] = jsonFormat2(AnalyticProject.apply)
