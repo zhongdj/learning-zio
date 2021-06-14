@@ -6,17 +6,30 @@ ThisBuild / organization := "net.imadz"
 ThisBuild / organizationName := "Madz Technologies"
 
 val zioVersion = "1.0.7"
+val akkaVersion = "2.6.15"
+val akkaHttpVersion = "10.2.4"
+val logbackVersion = "1.2.3"
+val scalatestVersion = "3.2.9"
+val jodaTimeVersion = "2.10.10"
 lazy val root = (project in file("."))
   .settings(
     name := "learning-zio",
     libraryDependencies ++= Seq(
-      scalaTest % Test,
-      "joda-time" % "joda-time" % "2.10.10",
-      "dev.zio" %% "zio" % zioVersion,
-      "dev.zio" %% "zio-streams" % zioVersion,
-      "dev.zio" %% "zio-test" % zioVersion % "test",
-      "dev.zio" %% "zio-test-sbt" % zioVersion % "test",
-      "dev.zio" %% "zio-test-magnolia" % zioVersion % "test"
+      "joda-time"         % "joda-time"                 % jodaTimeVersion,
+      "dev.zio"           %% "zio"                      % zioVersion,
+      "dev.zio"           %% "zio-streams"              % zioVersion,
+      "com.typesafe.akka" %% "akka-http"                % akkaHttpVersion,
+      "com.typesafe.akka" %% "akka-http-spray-json"     % akkaHttpVersion,
+      "com.typesafe.akka" %% "akka-actor-typed"         % akkaVersion,
+      "com.typesafe.akka" %% "akka-stream"              % akkaVersion,
+      "ch.qos.logback"     % "logback-classic"          % logbackVersion,
+
+      "dev.zio"           %% "zio-test"                 % zioVersion            % Test,
+      "dev.zio"           %% "zio-test-sbt"             % zioVersion            % Test,
+      "dev.zio"           %% "zio-test-magnolia"        % zioVersion            % Test,
+      "com.typesafe.akka" %% "akka-http-testkit"        % akkaHttpVersion       % Test,
+      "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion           % Test,
+      "org.scalatest"     %% "scalatest"                % scalatestVersion      % Test
     ),
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
   )
