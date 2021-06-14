@@ -72,10 +72,10 @@ curl -H "Content-Type:application/json" \
   http://${analytic.host}:${port}/v1/analyticProjects \
   -d \
   '{
-    "gitProject" : {
+    "gitProjects" : [{
       "repositoryUrl" : "git@github.com:zhongdj/git-stats-backend.git",
       "branch"        : "master"
-    }
+    }]
   }'
 ```
 
