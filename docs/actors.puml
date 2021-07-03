@@ -1,0 +1,84 @@
+@startuml
+package "domain" {
+  interface DomainEvent
+  interface DomainEventProcessor
+  package "mgt" {
+    class AnalysisProject
+  }
+  package "git" {
+  class GitProject
+  package "commit" {
+    class GitCommit
+    class CommitCreated implements DomainEvent
+    interface GitCommitRepository
+  }
+  package "entry" {
+    class EntryAdded implements DomainEvent
+    class EntryDeleted implements DomainEvent
+    class EntryMoved implements DomainEvent
+    EntryAdded *-up- GitCommit
+    EntryDeleted *-up- GitCommit
+    EntryMoved *-up- GitCommit
+    class CommitEntryOpProcessor implements DomainEventProcessor
+  }
+  package "contributor" {
+   class Contributor
+   class ProjectContributor
+   interface ContributorRepository
+   ContributorRepository .. Contributor: save >
+   ContributorRepository .. ProjectContributor: save >
+   ProjectContributor *- GitProject
+  }
+  }
+  AnalysisProject "1" *-up- "many" GitProject: contains >
+  DomainEventProcessor "1" .left. "many" DomainEvent: consumes
+  GitCommit *-- GitProject: belongs >
+  CommitEntryOpProcessor .. EntryAdded: generates
+  CommitEntryOpProcessor .. EntryDeleted: generates
+  CommitEntryOpProcessor .. EntryMoved: generates
+}
+
+package "application.core" {
+ class AnalysisProjectOwner<Actor>
+ class AnalysisProjectWorker<Actor>
+ class AnalysisTaskExecutor<Actor>
+ interface AnalysisTask
+ AnalysisProjectOwner "1" *-up- "many" AnalysisProjectWorker: dispatch git\nproject >
+ AnalysisProjectWorker "1" -- "many" AnalysisTaskExecutor: Orchestrate Tasks into >
+ AnalysisTask --up-- GitProject: analysis >
+ AnalysisProjectOwner "1" -up- "1" AnalysisProject: Manage >
+ AnalysisTaskExecutor "1" -- "1" AnalysisTask: completes >
+}
+
+package "application.task" {
+ class GitCloneOrUpdateTask implements AnalysisTask
+ class ReadCommitTask
+ class CommitMessageAnalysisTask implements AnalysisTask
+ class CommitContributorProcessor<Actor> implements DomainEventProcessor
+ CommitContributorProcessor "1" .up. "many" CommitCreated: consumes >
+ CommitContributorProcessor "0..1" .up. "1" AnalysisProject: within >
+ CommitContributorProcessor "1" .up. "many" Contributor: generates >
+ CommitContributorProcessor "1" .up. "many" ProjectContributor: generates >
+ CommitContributorProcessor *-up- ContributorRepository: aggregates
+
+ ReadCommitTask ..|> AnalysisTask
+ GitCloneOrUpdateTask "1" o-up- "1" GitProject: clone/update >
+ ReadCommitTask "1" .up. "many" GitCommit: read from\ngit db
+ ReadCommitTask "many" o.up. "1" GitCommitRepository:  write commits to
+ ReadCommitTask "1" .up. "many" CommitCreated: generates >
+}
+
+package "infrastructure" {
+ class AnalysisProjectDelegate
+ class MySQLGitCommitRepository
+ class MySQLContributorRepository
+ MySQLContributorRepository -..up..|> ContributorRepository
+ MySQLGitCommitRepository -..up..|> GitCommitRepository
+ AnalysisProjectDelegate "1" ..up.. "many" AnalysisProjectOwner: Create or Update >
+}
+
+
+
+
+@enduml
+

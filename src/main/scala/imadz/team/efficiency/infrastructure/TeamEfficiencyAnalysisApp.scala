@@ -10,7 +10,6 @@ import scala.util.{Failure, Success}
 
 object TeamEfficiencyAnalysisApp {
 
-
   def main(args: Array[String]): Unit = {
     val rootBehavior = Behaviors.setup[Nothing] { context =>
       val taskManager: ActorRef[Command] = context.spawn(AnalysisProjectManager(), "analysis-project-manager")
