@@ -2,7 +2,7 @@ package imadz.team.efficiency.domain.processor
 
 import imadz.team.efficiency.domain.Errors.{DomainError, GitDiffTreeExtractError}
 import imadz.team.efficiency.domain.EventPublisher
-import imadz.team.efficiency.domain.entity.{GitCommitCreated, TreeEntryEvent}
+import imadz.team.efficiency.domain.entity.git.{GitCommitCreated, TreeEntryEvent}
 import imadz.team.efficiency.domain.service.GitError
 import imadz.team.efficiency.domain.service.git.GitCommands.diff_tree_full_index_r_M_C
 import imadz.team.efficiency.domain.service.git._
@@ -10,7 +10,10 @@ import imadz.team.efficiency.domain.service.shell.shellExecMap
 import zio.IO
 import zio.stream.ZSink.foldLeft
 
-class CommitEntryOpProcessor(eventPublisher: EventPublisher) {
+class CommitEntryOpProcessor(eventPublisher: EventPublisher) extends DomainEventProcessor[GitCommitCreated] {
+
+  // FIXME
+  override def onEvent(e: GitCommitCreated): Unit = processCommitCreated(e)
 
   def processCommitCreated(created: GitCommitCreated): IO[DomainError, Unit] = {
     for {
@@ -26,5 +29,6 @@ class CommitEntryOpProcessor(eventPublisher: EventPublisher) {
   private def nils[T] = List[T]()
 
   private def cons[T]: (List[T], T) => List[T] = (xs, x) => x :: xs
+
 }
 

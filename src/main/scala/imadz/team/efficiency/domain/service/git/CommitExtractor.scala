@@ -1,6 +1,6 @@
 package imadz.team.efficiency.domain.service.git
 
-import imadz.team.efficiency.domain.entity.GitCommit
+import imadz.team.efficiency.domain.entity.git.GitCommit
 import imadz.team.efficiency.domain.service.GitError
 import imadz.team.efficiency.domain.service.git.GitCommands.{cat_file_p, log_full_history_pretty_fuller}
 import imadz.team.efficiency.domain.service.git.GitCommitParser.{parseCatFileCommitObject, parseFullerLog}

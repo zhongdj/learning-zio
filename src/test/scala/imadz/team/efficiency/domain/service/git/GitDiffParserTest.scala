@@ -2,6 +2,7 @@ package imadz.team.efficiency.domain.service.git
 
 import imadz.team.efficiency.common.Shells.fromOutput
 import imadz.team.efficiency.domain.entity._
+import imadz.team.efficiency.domain.entity.git.{AddFile, CopyFile, DeleteFile, EntryAdded, EntryCopied, EntryDeleted, EntryModified, EntryMoved, EntryUnmerged, ModifyFile, RenameFile, UnmergeFile}
 import imadz.team.efficiency.domain.service.GitCommandExecutionError
 import imadz.team.efficiency.domain.service.git.GitTreeDiffParser.parseTreeDiffContent
 import zio.Chunk

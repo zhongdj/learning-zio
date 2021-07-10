@@ -1,4 +1,4 @@
-package imadz.team.efficiency.infrastructure
+package imadz.team.efficiency.infrastructure.controller
 
 import akka.actor.typed.scaladsl.AskPattern._
 import akka.actor.typed.{ActorRef, ActorSystem}
@@ -7,8 +7,8 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.util.Timeout
-import imadz.team.efficiency.infrastructure.AnalysisProjectManager.{AnalyticProjectCreated, Command, CreateProject}
-import imadz.team.efficiency.infrastructure.AnalyticProject._
+import imadz.team.efficiency.infrastructure.controller.AnalysisProjectDelegate.{AnalyticProjectCreated, Command, CreateProject}
+import imadz.team.efficiency.infrastructure.controller.AnalyticProject._
 
 import scala.concurrent.Future
 

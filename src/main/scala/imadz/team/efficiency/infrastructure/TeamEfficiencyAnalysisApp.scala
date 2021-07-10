@@ -4,7 +4,8 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, ActorSystem}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
-import imadz.team.efficiency.infrastructure.AnalysisProjectManager.Command
+import imadz.team.efficiency.infrastructure.controller.AnalysisProjectDelegate.Command
+import imadz.team.efficiency.infrastructure.controller.{AnalysisProjectDelegate, AnalysisProjectRoutes}
 
 import scala.util.{Failure, Success}
 
@@ -12,7 +13,7 @@ object TeamEfficiencyAnalysisApp {
 
   def main(args: Array[String]): Unit = {
     val rootBehavior = Behaviors.setup[Nothing] { context =>
-      val taskManager: ActorRef[Command] = context.spawn(AnalysisProjectManager(), "analysis-project-manager")
+      val taskManager: ActorRef[Command] = context.spawn(AnalysisProjectDelegate(), "analysis-project-manager")
       val route: Route = new AnalysisProjectRoutes(taskManager: ActorRef[Command])(context.system).route
       startHttpServer(route)(context.system)
       Behaviors.empty

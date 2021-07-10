@@ -1,4 +1,4 @@
-package imadz.team.efficiency.domain.entity
+package imadz.team.efficiency.domain.entity.git
 
 // Entity
 trait GitTreeEntry {

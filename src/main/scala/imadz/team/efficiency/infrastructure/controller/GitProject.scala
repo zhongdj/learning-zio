@@ -1,6 +1,6 @@
-package imadz.team.efficiency.infrastructure
+package imadz.team.efficiency.infrastructure.controller
 
-import imadz.team.efficiency.infrastructure.AnalysisProjectManager.AnalyticProjectCreated
+import imadz.team.efficiency.infrastructure.controller.AnalysisProjectDelegate.AnalyticProjectCreated
 import spray.json.DefaultJsonProtocol._
 import spray.json.RootJsonFormat
 

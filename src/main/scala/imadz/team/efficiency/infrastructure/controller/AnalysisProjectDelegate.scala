@@ -1,4 +1,4 @@
-package imadz.team.efficiency.infrastructure
+package imadz.team.efficiency.infrastructure.controller
 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
@@ -7,7 +7,7 @@ import zio.IO
 
 import scala.util.{Failure, Success}
 
-object AnalysisProjectManager {
+object AnalysisProjectDelegate {
 
   trait Command
 

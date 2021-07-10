@@ -1,8 +1,8 @@
-package imadz.team.efficiency.domain
+package imadz.team.efficiency.domain.entity
 
 import org.joda.time.DateTime
 
-package object entity {
+package object git {
   type GitId = String
   type FileMode = String
 

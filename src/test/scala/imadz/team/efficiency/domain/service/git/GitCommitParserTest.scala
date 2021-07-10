@@ -1,7 +1,8 @@
 package imadz.team.efficiency.domain.service.git
 
 import imadz.team.efficiency.common.Shells.fromOutput
-import imadz.team.efficiency.domain.entity.{GitCommit, GitUser}
+import imadz.team.efficiency.domain.entity.{GitUser, git}
+import imadz.team.efficiency.domain.entity.git.GitCommit
 import imadz.team.efficiency.domain.service
 import imadz.team.efficiency.domain.service.GitCommandExecutionError
 import imadz.team.efficiency.domain.service.git.GitCommitParser.{parseCatFileCommitObject, parseFullerLog}
@@ -41,13 +42,13 @@ object GitCommitParserTest extends DefaultRunnableSpec {
           // Then
         } yield assert(actual) {
           equalTo(Chunk.fromIterable(List(
-            GitCommit(
+            git.GitCommit(
               id = "b2a58bc5a4f761da4385ad768b53efaaa8d34b48",
               topLevelTreeId = "", parentCommitId = None,
               author = GitUser(name = "Barry Zhong", email = "zhongdj@gmail.com", timestamp = new DateTime("2020-11-28T23:18:07+08:00")),
               committer = GitUser(name = "Barry Zhong", email = "zhongdj@gmail.com", timestamp = new DateTime("2020-11-28T23:18:07+08:00")),
               message = "fix compile error"
-            ), GitCommit(
+            ), git.GitCommit(
               id = "79e39bf41d2e7ab01baa3e1b4e5c01e01a44e9a8",
               topLevelTreeId = "", parentCommitId = None,
               author = GitUser(name = "Barry Zhong", email = "zhongdj@gmail.com", timestamp = new DateTime("2020-10-07T19:41:26+08:00")),

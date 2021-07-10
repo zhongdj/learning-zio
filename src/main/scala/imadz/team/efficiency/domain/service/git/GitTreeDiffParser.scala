@@ -1,8 +1,8 @@
 package imadz.team.efficiency.domain.service.git
 
-import imadz.team.efficiency.domain.entity.{AddFile, ChangeType, CopyFile, DeleteFile, EntryAdded, EntryCopied, EntryDeleted, EntryModified, EntryMoved, EntryTypeChanged, EntryUnknown, EntryUnmerged, ModifyFile, RenameFile, TreeEntryEvent, Unknown, UnmergeFile}
+import imadz.team.efficiency.domain.entity.git._
 import imadz.team.efficiency.domain.service.{GitCommandExecutionError, GitError}
-import zio.{IO, ZIO, stream}
+import zio.IO
 import zio.stream.{Stream, UStream}
 
 object GitTreeDiffParser {

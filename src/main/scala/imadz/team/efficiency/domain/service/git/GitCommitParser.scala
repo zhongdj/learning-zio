@@ -1,19 +1,22 @@
 package imadz.team.efficiency.domain.service.git
 
-import imadz.team.efficiency.domain.entity.{GitCommit, GitId, GitUser}
+import imadz.team.efficiency.domain.entity.git.{GitCommit, _}
 import imadz.team.efficiency.domain.service.{GitCommandExecutionError, GitError}
 import org.joda.time.DateTime
 import zio.stream._
 import zio.{Chunk, IO}
 
 object GitCommitParser {
+  private val lines:(String, String) => String = (x, y) => s"$x\n$y".trim
+  private val blank: String = ""
 
   def parseCatFileCommitObject(lineStream: UStream[String]): IO[GitError, CatCommitObject] = {
     import CatFileCommitParser._
-    lineStream.fold("")((x, y) => s"$x\n$y")
-      .map(_.trim)
+    lineStream
+      .fold(blank)(lines)
       .flatMap(compileCatFileCommit)
   }
+
 
   def parseFullerLog(logOutput: UStream[String]): Stream[GitError, GitCommit] = {
     import LogCommitParser._
