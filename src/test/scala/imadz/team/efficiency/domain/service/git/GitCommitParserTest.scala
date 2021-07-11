@@ -1,7 +1,8 @@
 package imadz.team.efficiency.domain.service.git
 
 import imadz.team.efficiency.common.Shells.fromOutput
-import imadz.team.efficiency.domain.entity.{GitUser, git}
+import imadz.team.efficiency.domain.entity.git
+import imadz.team.efficiency.domain.entity.git._
 import imadz.team.efficiency.domain.entity.git.GitCommit
 import imadz.team.efficiency.domain.service
 import imadz.team.efficiency.domain.service.GitCommandExecutionError

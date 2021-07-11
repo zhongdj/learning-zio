@@ -13,7 +13,7 @@ object TeamEfficiencyAnalysisApp {
 
   def main(args: Array[String]): Unit = {
     val rootBehavior = Behaviors.setup[Nothing] { context =>
-      val taskManager: ActorRef[Command] = context.spawn(AnalysisProjectDelegate(), "analysis-project-manager")
+      val taskManager: ActorRef[Command] = context.spawn(AnalysisProjectDelegate(), "analysis-project-delegate")
       val route: Route = new AnalysisProjectRoutes(taskManager: ActorRef[Command])(context.system).route
       startHttpServer(route)(context.system)
       Behaviors.empty
