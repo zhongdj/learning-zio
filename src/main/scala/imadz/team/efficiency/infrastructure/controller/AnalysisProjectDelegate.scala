@@ -23,7 +23,6 @@ object AnalysisProjectDelegate {
     lazy val gitRepoBasedir = context.system.settings.config.getString("imadz.git.repo.basedir")
     implicit val system: ActorSystem[Nothing] = context.system
     implicit val timeout: Timeout = Timeout.create(context.system.settings.config.getDuration("imadz.routes.ask-timeout"))
-    implicit val ec: ExecutionContextExecutor = context.executionContext
 
     command match {
       case CreateProject(project, replyTo) =>

@@ -10,17 +10,17 @@ import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 
 sealed trait WorkerCommand
-
 case object KickOff extends WorkerCommand
 
-
 class AnalysisProjectWorker(parent: ActorRef[ProjectOwnerCommand], context: ActorContext[WorkerCommand], project: GitProject, seq: Int) extends AbstractBehavior[WorkerCommand](context) {
-
+  context.log.info("Worker {} is created.", this)
   override def onMessage(msg: WorkerCommand): Behavior[WorkerCommand] = Behaviors.receive { (context, message) =>
-    implicit val ec: ExecutionContextExecutor = context.system.executionContext
     message match {
       case KickOff =>
-        evaluateTasks(orchestrateTasks)(parent)
+        evaluateTasks(orchestrateTasks)(parent)(context.executionContext)
+        Behaviors.same
+      case any =>
+        context.log.info("Worker receives {}.", any)
         Behaviors.same
     }
   }
@@ -33,10 +33,8 @@ class AnalysisProjectWorker(parent: ActorRef[ProjectOwnerCommand], context: Acto
     context.log.info("Evaluating project {}.", project)
     runtime.unsafeRunToFuture(tasks(project)).future.onComplete {
       case Success(_) =>
-//        context.log.info("Project Evaluated Successfully: {}.", project)
         replyTo ! GitProjectProcessResult(project)
       case Failure(ex) =>
-//        context.log.warn(s"Project Evaluated Failed: {} \n Caused by: ${ex.getMessage}", project.toString)
         replyTo ! GitProjectProcessResult(project, error = Some(ex.getMessage))
     }
   }
