@@ -8,15 +8,12 @@ import imadz.team.efficiency.domain.entity.mgt.AnalysisProject
 sealed trait ProjectOwnerCommand
 
 final case class Identity(replyTo: ActorRef[IdentityResponse]) extends ProjectOwnerCommand
-
 final case class IdentityResponse(id: Int, key: String)
 
 final case class CreateAnalysisProject(project: AnalysisProject, replyTo: ActorRef[AnalysisProjectCreateResponse]) extends ProjectOwnerCommand
-
 final case class AnalysisProjectCreateResponse(id: Option[Int] = None, error: Option[String] = None)
 
 final case class UpdateAnalysisProject(replyTo: ActorRef[UpdateProjectResponse]) extends ProjectOwnerCommand
-
 final case class UpdateProjectResponse()
 
 final case class GitProjectProcessResult(project: GitProject, error: Option[String] = None, warning: Option[String] = None) extends ProjectOwnerCommand {
