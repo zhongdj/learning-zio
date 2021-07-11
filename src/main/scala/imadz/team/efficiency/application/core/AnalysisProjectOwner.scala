@@ -28,7 +28,7 @@ final case class GitProjectProcessResult(project: GitProject, error: Option[Stri
 class AnalysisProjectOwner(context: ActorContext[ProjectOwnerCommand], id: Int, key: String) extends AbstractBehavior[ProjectOwnerCommand](context) {
   private var workers = Map.empty[GitProject, ActorRef[WorkerCommand]]
 
-  override def onMessage(msg: ProjectOwnerCommand): Behavior[ProjectOwnerCommand] = idle
+  override def onMessage(msg: ProjectOwnerCommand): Behavior[ProjectOwnerCommand] = idle()
 
   private def idle(): Behavior[ProjectOwnerCommand] = Behaviors.receive { (context, message) =>
     context.log.info("Receiving message {} in idle state", message)
@@ -65,13 +65,13 @@ class AnalysisProjectOwner(context: ActorContext[ProjectOwnerCommand], id: Int, 
         replyTo ! IdentityResponse(id, key)
         Behaviors.same
       case CreateAnalysisProject(project, replyTo) =>
-        replyTo ! AnalysisProjectCreateResponse(error = Some(s"Project ${project} is in progress"))
+        replyTo ! AnalysisProjectCreateResponse(error = Some(s"Project $project is in progress"))
         Behaviors.same
-      case r@GitProjectProcessResult(project, error, warning) =>
+      case r@GitProjectProcessResult(_, error, warning) =>
         context.log.info("receiving result for {}", r)
         error.foreach(context.log.error)
         warning.foreach(context.log.warn)
-        idle
+        idle()
       case WorkerTerminated(project) =>
         workers -= project
         Behaviors.empty
@@ -84,20 +84,20 @@ class AnalysisProjectOwner(context: ActorContext[ProjectOwnerCommand], id: Int, 
   private def setupWorkers(context: ActorContext[ProjectOwnerCommand], project: AnalysisProject): Unit = {
     //FIXME: the order of the list might makes project id different
     project.gitProjects.zipWithIndex.foreach { i =>
-      val gitProject = GitProject(i._1.repositoryUrl, i._1.branch, i._2, s"${project.basedir}/${id}")
+      val gitProject = GitProject(i._1.repositoryUrl, i._1.branch, i._2, s"${project.basedir}/$id")
       if (workers.contains(gitProject)) {
         kickOffWorker(workers(gitProject))
       } else {
         val worker = context.spawn(AnalysisProjectWorker(context.self, gitProject, i._2), s"worker-${i._2}")
         context.watchWith(worker, WorkerTerminated(gitProject))
-        context.log.debug(s"spawning workers for ${i}:{} ...", worker)
+        context.log.debug(s"spawning workers for $i:{} ...", worker)
         workers += (gitProject -> worker)
         kickOffWorker(worker)
       }
     }
   }
 
-  private def kickOffWorker(worker: ActorRef[WorkerCommand]) = worker ! KickOff
+  private def kickOffWorker(worker: ActorRef[WorkerCommand]): Unit = worker ! KickOff
 
 }
 

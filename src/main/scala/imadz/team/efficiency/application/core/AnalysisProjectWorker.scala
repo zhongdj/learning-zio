@@ -10,13 +10,16 @@ import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 
 sealed trait WorkerCommand
+
 case object KickOff extends WorkerCommand
 
 class AnalysisProjectWorker(parent: ActorRef[ProjectOwnerCommand], context: ActorContext[WorkerCommand], project: GitProject, seq: Int) extends AbstractBehavior[WorkerCommand](context) {
   context.log.info("Worker {} is created.", this)
-  override def onMessage(msg: WorkerCommand): Behavior[WorkerCommand] = Behaviors.receive { (context, message) =>
-    message match {
+
+  override def onMessage(msg: WorkerCommand): Behavior[WorkerCommand] = {
+    msg match {
       case KickOff =>
+        context.log.info("Evaluating project {}.", project)
         evaluateTasks(orchestrateTasks)(parent)(context.executionContext)
         Behaviors.same
       case any =>
@@ -30,7 +33,6 @@ class AnalysisProjectWorker(parent: ActorRef[ProjectOwnerCommand], context: Acto
   private val runtime = zio.Runtime.default
 
   private def evaluateTasks(tasks: GitProject => IO[AnalysisTaskError, Unit])(replyTo: ActorRef[GitProjectProcessResult])(implicit ec: ExecutionContextExecutor): Unit = {
-    context.log.info("Evaluating project {}.", project)
     runtime.unsafeRunToFuture(tasks(project)).future.onComplete {
       case Success(_) =>
         replyTo ! GitProjectProcessResult(project)
